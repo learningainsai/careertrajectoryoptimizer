@@ -1,0 +1,301 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: #1B2430;
+  background: #F5F7FA;
+  -webkit-font-smoothing: antialiased;
+}
+:root {
+  --ink: #0A1220;
+  --ink2: #142A52;
+  --teal: #2F5FD9;
+  --teal-deep: #1E3A8A;
+  --teal-light: #7FA6FF;
+  --amber: #B45309;
+  --amber-bg: #FDECD3;
+  --emerald: #15803D;
+  --emerald-bg: #DCFCE7;
+  --rose: #BE123C;
+  --rose-bg: #FDE1E7;
+  --indigo: #6D28D9;
+  --indigo-bg: #EDE6FB;
+  --slate-900: #131C28;
+  --slate-700: #33475A;
+  --slate-500: #62788C;
+  --slate-300: #D6E0E8;
+  --slate-100: #EEF3F6;
+  --card: #FFFFFF;
+}
+.page {
+  width: 210mm;
+  min-height: 296mm;
+  background: #F5F7FA;
+  position: relative;
+  padding-bottom: 0mm;
+}
+.page + .page { page-break-before: always; }
+
+/* ---------- hero ---------- */
+.hero {
+  background:
+    radial-gradient(720px 420px at 88% -10%, rgba(127,166,255,0.35), transparent 60%),
+    linear-gradient(135deg, var(--ink) 0%, var(--ink2) 48%, var(--teal-deep) 100%);
+  color: #EAF0F3;
+  padding: 6.5mm 14mm 4.3mm 14mm;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; }
+.brandmark { display: flex; align-items: center; gap: 2.6mm; }
+.brand-badge {
+  width: 10mm; height: 10mm; border-radius: 2.6mm;
+  background: linear-gradient(155deg, var(--teal-light), var(--teal-deep));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  flex-shrink: 0;
+}
+.brand-badge svg { width: 5.4mm; height: 5.4mm; }
+.brand-name { font-size: 11.5pt; font-weight: 700; letter-spacing: 0.2px; color: #FFFFFF; }
+.brand-sub { font-size: 7pt; color: #A9C1E8; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 600; }
+.kicker-pill {
+  display: inline-flex; align-items: center; gap: 1.5mm;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 1.7mm 3.6mm;
+  font-size: 7.2pt; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+  color: #DCE7F7; white-space: nowrap;
+}
+.hero-title { font-size: 19.5pt; font-weight: 800; line-height: 1.12; margin: 3.5mm 0 1.6mm 0; color: #FFFFFF; letter-spacing: -0.3px; }
+.hero-tagline { font-size: 10.2pt; font-weight: 600; color: var(--teal-light); margin: 0 0 1.8mm 0; }
+.hero-desc { font-size: 8.6pt; line-height: 1.44; color: #C9D6EA; max-width: 150mm; margin: 0 0 3mm 0; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 2mm; }
+.chip {
+  font-size: 7.2pt; font-weight: 600; color: #EAF1FF;
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+  padding: 1.4mm 3.2mm; border-radius: 20px; letter-spacing: 0.2px;
+}
+.hero-meta {
+  text-align: right; font-size: 7.6pt; color: #AFC0DC; line-height: 1.6; min-width: 46mm;
+}
+.hero-meta b { color: #FFFFFF; font-weight: 700; }
+
+/* ---------- body ---------- */
+.body-wrap { padding: 3.4mm 14mm 0 14mm; }
+.section-label {
+  display: flex; align-items: center; gap: 2.2mm;
+  font-size: 8.6pt; font-weight: 800; color: var(--slate-900);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin: 3mm 0 1.5mm 0;
+}
+.section-label .dot { width: 2.8mm; height: 2.8mm; border-radius: 1px; flex-shrink: 0; }
+.dot-teal { background: var(--teal); }
+.dot-amber { background: var(--amber); }
+.dot-rose { background: var(--rose); }
+.dot-emerald { background: var(--emerald); }
+.dot-indigo { background: var(--indigo); }
+
+.callout {
+  border-radius: 2.6mm; padding: 2.2mm 4mm; font-size: 8pt; line-height: 1.34;
+  border-left: 3px solid; margin-bottom: 1mm;
+}
+.callout-rose { background: var(--rose-bg); border-color: var(--rose); color: #6E1420; }
+.callout-teal { background: #E7EEFC; border-color: var(--teal); color: #10254F; }
+.callout-amber { background: var(--amber-bg); border-color: var(--amber); color: #5C3406; }
+.callout b { font-weight: 700; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 2.6mm; }
+
+.card {
+  background: var(--card); border-radius: 2.6mm; padding: 2mm 2.6mm;
+  border: 1px solid var(--slate-300); border-top: 2.4px solid var(--teal);
+  box-shadow: 0 1px 2px rgba(15,25,45,0.05);
+}
+.card.acc-amber { border-top-color: var(--amber); }
+.card.acc-rose { border-top-color: var(--rose); }
+.card.acc-emerald { border-top-color: var(--emerald); }
+.card.acc-indigo { border-top-color: var(--indigo); }
+.card-icon {
+  width: 6.6mm; height: 6.6mm; border-radius: 1.8mm; display: flex; align-items: center; justify-content: center;
+  background: #E7EEFC; margin-bottom: 1.6mm;
+}
+.card-icon svg { width: 3.8mm; height: 3.8mm; }
+.card.acc-amber .card-icon { background: var(--amber-bg); }
+.card.acc-rose .card-icon { background: var(--rose-bg); }
+.card.acc-emerald .card-icon { background: var(--emerald-bg); }
+.card.acc-indigo .card-icon { background: var(--indigo-bg); }
+.card-title { font-size: 8.8pt; font-weight: 700; color: var(--slate-900); margin-bottom: 0.7mm; }
+.card-desc { font-size: 7.5pt; line-height: 1.34; color: var(--slate-700); }
+
+.stat-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2.2mm; }
+.stat-tile {
+  border-radius: 2.4mm; padding: 2.1mm 2.1mm; text-align: left;
+  background: var(--slate-100); border: 1px solid var(--slate-300);
+}
+.stat-tile .num { font-size: 12pt; font-weight: 800; color: var(--slate-900); line-height: 1; }
+.stat-tile .label { font-size: 6.6pt; color: var(--slate-500); margin-top: 0.9mm; line-height: 1.26; font-weight: 600; }
+.stat-tile.teal { background: #E7EEFC; border-color: #C1D2F5; }
+.stat-tile.amber { background: var(--amber-bg); border-color: #F3D3A6; }
+.stat-tile.emerald { background: var(--emerald-bg); border-color: #BEE3CE; }
+.stat-tile.indigo { background: var(--indigo-bg); border-color: #D3C4F2; }
+.stat-tile.rose { background: var(--rose-bg); border-color: #F0C2CC; }
+
+.pipeline {
+  display: flex; align-items: stretch; flex-wrap: wrap; gap: 0mm 0mm;
+  background: var(--slate-100); border: 1px solid var(--slate-300); border-radius: 2.6mm; padding: 1.6mm;
+}
+.pipe-step {
+  background: var(--card); border: 1px solid var(--slate-300); border-radius: 2mm;
+  padding: 1mm 2mm; font-size: 6.9pt; text-align: center; min-width: 23mm;
+}
+.pipe-step b { display: block; font-size: 7.4pt; color: var(--slate-900); font-weight: 700; margin-bottom: 0.3mm; }
+.pipe-step span { color: var(--slate-500); }
+.pipe-arrow { display: flex; align-items: center; justify-content: center; padding: 0 1.4mm; color: var(--teal); font-size: 9pt; font-weight: 700; }
+.pipe-step.agent { border-color: var(--amber); background: var(--amber-bg); }
+.pipe-step.agent b { color: #5C3406; }
+
+table.kv { width: 100%; border-collapse: collapse; font-size: 7.6pt; }
+table.kv th { text-align: left; font-size: 6.9pt; text-transform: uppercase; letter-spacing: 0.5px; color: var(--slate-500); padding: 1.2mm 2mm; border-bottom: 1.5px solid var(--slate-300); }
+table.kv td { padding: 1.3mm 2mm; border-bottom: 1px solid var(--slate-100); color: var(--slate-700); vertical-align: top; }
+table.kv td.mono, code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 7.2pt; color: var(--teal-deep); background: #E7EEFC; padding: 0.4mm 1.4mm; border-radius: 1mm; }
+table.kv tr:last-child td { border-bottom: none; }
+
+.codeblock {
+  background: var(--ink); color: #D9E6FF; border-radius: 2.4mm; padding: 2.8mm 3.8mm;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 7.6pt; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
+}
+.codeblock .c1 { color: #7A8FBF; }
+.codeblock .c2 { color: #7FC4D9; }
+
+ul.tick { list-style: none; padding: 0; margin: 0; }
+ul.tick li { position: relative; padding-left: 4.2mm; font-size: 7.2pt; line-height: 1.3; color: var(--slate-700); margin-bottom: 0.6mm; }
+ul.tick li::before { content: ""; position: absolute; left: 0; top: 1.5mm; width: 2.1mm; height: 2.1mm; border-radius: 50%; background: var(--teal); }
+ul.tick.amber li::before { background: var(--amber); }
+ul.tick.rose li::before { background: var(--rose); }
+
+.steps-row { display: flex; gap: 2.6mm; }
+.step-pill {
+  flex: 1; background: var(--card); border: 1px solid var(--slate-300); border-radius: 2.4mm;
+  padding: 2.2mm 2.8mm; font-size: 7.4pt; color: var(--slate-700); display: flex; gap: 1.8mm; align-items: flex-start;
+}
+.step-pill .n {
+  flex-shrink: 0; width: 5mm; height: 5mm; border-radius: 50%; background: var(--teal);
+  color: #fff; font-size: 7.6pt; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+
+.footer-cta {
+  margin-top: 2.6mm;
+  background: linear-gradient(120deg, var(--ink) 0%, var(--teal-deep) 100%);
+  color: #fff; padding: 2.6mm 14mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm;
+}
+.footer-cta .ftitle { font-size: 11.5pt; font-weight: 800; margin-bottom: 1mm; }
+.footer-cta .fsub { font-size: 7.4pt; color: #C9D6EA; }
+.footer-cta .fright { text-align: right; font-size: 7.1pt; color: #AFC0DC; }
+.footer-cta .fright b { color: #fff; }
+.foot-note { text-align: center; font-size: 6.6pt; color: var(--slate-500); padding: 0.7mm 14mm 0 14mm; }
+
+.two-col-body { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 5mm; align-items: start; }
+.small-h { font-size: 8pt; font-weight: 700; color: var(--slate-900); margin: 2.4mm 0 1mm 0; }
+p.lead { font-size: 8.4pt; line-height: 1.5; color: var(--slate-700); margin: 0 0 1.6mm 0; }
+</style></head>
+<body>
+<div class="page">
+  
+<div class="hero">
+  <div class="hero-top">
+    <div class="brandmark">
+      <div class="brand-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#08152E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.2 8.8l-2 6-6 2 2-6z"/></svg></div>
+      <div>
+        <div class="brand-name">Career Trajectory Optimizer</div>
+        <div class="brand-sub">Deep Agents Career Coach</div>
+      </div>
+    </div>
+    <span class="kicker-pill">Setup Guide &middot; v-current</span>
+  </div>
+  <div class="hero-title">Setup Guide</div>
+  <div class="hero-tagline">Local installation, credentials, and running the agent</div>
+  <div class="hero-desc">Everything needed to run Career Trajectory Optimizer end to end: environment setup, provider credentials, the notebook walkthrough, and the Streamlit UI.</div>
+  <div class="chip-row"><span class="chip">Python 3.12+</span><span class="chip">uv</span><span class="chip">OpenAI required</span><span class="chip">LinkUp/Tavily optional</span><span class="chip">~10 min</span></div>
+</div>
+
+  <div class="body-wrap">
+    <div class="section-label"><span class="dot dot-teal"></span>Prerequisites</div>
+    <div class="grid-4"><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1.6"/><path d="M7 9l3.5 3L7 15"/><path d="M13 15h4"/></svg></div><div class="card-title">Python 3.12+</div><div class="card-desc">A working interpreter; the project ships a pyproject.toml managed by uv.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="5" x2="5" y2="19"/><line x1="12" y1="5" x2="12" y2="19"/><line x1="19" y1="5" x2="19" y2="19"/><circle cx="5" cy="9" r="1.7" fill="#1E3A8A" stroke="none"/><circle cx="12" cy="15" r="1.7" fill="#1E3A8A" stroke="none"/><circle cx="19" cy="7" r="1.7" fill="#1E3A8A" stroke="none"/></svg></div><div class="card-title">uv</div><div class="card-desc">Handles the virtual environment and locked dependency installs via uv sync.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="10.5" width="13" height="9" rx="1.4"/><path d="M8 10.5V7.5a4 4 0 018 0v3"/></svg></div><div class="card-title">OpenAI API key</div><div class="card-desc">Required &mdash; the orchestrator and every subagent call this model.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="21" y1="21" x2="15.2" y2="15.2"/></svg></div><div class="card-title">LinkUp or Tavily key (optional)</div><div class="card-desc">Enables market-researcher&rsquo;s live web search; omit both to run grounding-only.</div></div></div>
+
+    <div class="section-label"><span class="dot dot-teal"></span>1&middot; Clone &amp; install</div>
+    <div class="codeblock"><span class="c1"># 1. Enter the project</span>
+<span class="c2">cd</span> careertrajectoryoptimizer
+
+<span class="c1"># 2. Install dependencies (creates .venv)</span>
+uv sync
+
+<span class="c1"># 3. Create your local environment file</span>
+cp .env.example .env</div>
+
+    <div class="section-label"><span class="dot dot-teal"></span>2&middot; Configure credentials</div>
+    <p class="lead">Copy <span class="mono">.env.example</span> to <span class="mono">.env</span> and fill in the values below. Only <span class="mono">OPENAI_API_KEY</span> is required.</p>
+    
+<table class="kv">
+  <tr><th>Variable</th><th>Purpose</th><th>Example</th></tr>
+  <tr><td class="mono">OPENAI_API_KEY</td><td>Required &mdash; powers the orchestrator and all subagents</td><td class="mono">sk-proj-...</td></tr>
+  <tr><td class="mono">LINKUP_API_KEY</td><td>Primary web-search provider for market-researcher</td><td class="mono">your-linkup-key</td></tr>
+  <tr><td class="mono">TAVILY_API_KEY</td><td>Fallback web-search provider if LinkUp is not set</td><td class="mono">your-tavily-key</td></tr>
+  <tr><td class="mono">CAREER_AGENT_MODEL</td><td>Overrides the default model</td><td class="mono">gpt-5-mini</td></tr>
+  <tr><td class="mono">LANGSMITH_API_KEY</td><td>Optional nested trace tree tracing</td><td class="mono">lsv2_pt_...</td></tr>
+</table>
+
+  </div>
+</div>
+<div class="page">
+  <div class="body-wrap" style="padding-top:12mm;">
+    <div class="section-label"><span class="dot dot-teal"></span>3&middot; Run the app</div>
+    <div class="codeblock"><span class="c1"># From the project root</span>
+uv run streamlit run app.py
+
+<span class="c1"># Open in a browser</span>
+<span class="c2">http://localhost:8501</span></div>
+
+    <div class="section-label"><span class="dot dot-indigo"></span>4&middot; Or run the notebook</div>
+    <div class="codeblock"><span class="c1"># In VS Code / Jupyter, select the project's .venv as the kernel</span>
+career_optimizer_deep_agent.ipynb
+
+<span class="c1"># Run the cells top to bottom</span></div>
+
+    <div class="section-label"><span class="dot dot-emerald"></span>5&middot; Subagents at a glance</div>
+    
+<table class="kv">
+  <tr><th>Subagent</th><th>Role</th><th>Tools</th></tr>
+  <tr><td class="mono">profile-analyzer</td><td>Parses profile/resume into a structured timeline</td><td>filesystem only</td></tr>
+  <tr><td class="mono">market-researcher</td><td>Gathers live Indian tech market data</td><td class="mono">web_search (LinkUp/Tavily)</td></tr>
+  <tr><td class="mono">salary-intelligence</td><td>Benchmarks pay vs. market</td><td>reads research brief</td></tr>
+  <tr><td class="mono">market-tracker</td><td>Tracks skill demand &amp; trends</td><td>reads research brief</td></tr>
+  <tr><td class="mono">risk-scorer</td><td>Scores 5-axis risk dashboard</td><td class="mono">risk_dashboard_validator</td></tr>
+  <tr><td class="mono">career-recommender</td><td>Goal-based gap analysis (Aspiration Mode)</td><td>reads all analysis</td></tr>
+  <tr><td class="mono">roadmap-planner</td><td>Builds the 30-60-90 day roadmap</td><td class="mono">roadmap_validator</td></tr>
+  <tr><td class="mono">critic</td><td>Reviews grounding, methodology, consistency</td><td>both validators</td></tr>
+</table>
+
+
+    <div class="section-label"><span class="dot dot-rose"></span>Troubleshooting</div>
+    <div class="grid-2"><div class="card acc-rose"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L21.5 20h-19z"/><line x1="12" y1="9.5" x2="12" y2="14"/><circle cx="12" cy="16.8" r="0.4" fill="#BE123C"/></svg></div>
+        <div class="card-title">OPENAI_API_KEY missing</div><div class="card-desc">The Streamlit sidebar shows a red status and blocks the agent from building; add it to <span class="mono">.env</span> and refresh.</div></div><div class="card acc-amber"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></div>
+        <div class="card-title">A run takes 5+ minutes</div><div class="card-desc">Expected &mdash; 6 to 9 subagents each run their own multi-turn loop. Career Aspiration Mode and the calendar-sync HITL gate add more time.</div></div><div class="card acc-rose"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5L21.5 20h-19z"/><line x1="12" y1="9.5" x2="12" y2="14"/><circle cx="12" cy="16.8" r="0.4" fill="#BE123C"/></svg></div>
+        <div class="card-title">A single call stalls for minutes</div><div class="card-desc">Likely a per-minute rate limit; the model is bounded to <span class="mono">max_retries=2, timeout=60s</span> so it fails fast and visibly instead.</div></div><div class="card acc-teal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5A1.5 1.5 0 014.5 5H9l2 2.5h8A1.5 1.5 0 0120.5 9v9A1.5 1.5 0 0119 19.5H4.5A1.5 1.5 0 013 18z"/></svg></div>
+        <div class="card-title">Resume text looks incomplete</div><div class="card-desc">Many resumes lay out skills/experience in tables &mdash; the extractor walks the whole document (paragraphs + nested tables) to avoid missing them.</div></div></div>
+  </div>
+  
+<div class="footer-cta">
+  <div>
+    <div class="ftitle">Ready to run in about 10 minutes.</div>
+    <div class="fsub">No infrastructure to stand up &mdash; the store, checkpointer, and backend are all in-process; only your API keys are external.</div>
+  </div>
+  <div class="fright"><b>1.</b> uv sync<br/><b>2.</b> Configure .env<br/><b>3.</b> streamlit run<br/><b>4.</b> Upload a resume</div>
+</div>
+
+  <div class="foot-note">Career Trajectory Optimizer &middot; Setup Guide &middot; local installation and runtime configuration</div>
+</div>
+</body></html>

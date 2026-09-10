@@ -1,0 +1,276 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color: #1B2430;
+  background: #F5F7FA;
+  -webkit-font-smoothing: antialiased;
+}
+:root {
+  --ink: #0A1220;
+  --ink2: #142A52;
+  --teal: #2F5FD9;
+  --teal-deep: #1E3A8A;
+  --teal-light: #7FA6FF;
+  --amber: #B45309;
+  --amber-bg: #FDECD3;
+  --emerald: #15803D;
+  --emerald-bg: #DCFCE7;
+  --rose: #BE123C;
+  --rose-bg: #FDE1E7;
+  --indigo: #6D28D9;
+  --indigo-bg: #EDE6FB;
+  --slate-900: #131C28;
+  --slate-700: #33475A;
+  --slate-500: #62788C;
+  --slate-300: #D6E0E8;
+  --slate-100: #EEF3F6;
+  --card: #FFFFFF;
+}
+.page {
+  width: 210mm;
+  min-height: 296mm;
+  background: #F5F7FA;
+  position: relative;
+  padding-bottom: 0mm;
+}
+.page + .page { page-break-before: always; }
+
+/* ---------- hero ---------- */
+.hero {
+  background:
+    radial-gradient(720px 420px at 88% -10%, rgba(127,166,255,0.35), transparent 60%),
+    linear-gradient(135deg, var(--ink) 0%, var(--ink2) 48%, var(--teal-deep) 100%);
+  color: #EAF0F3;
+  padding: 6.5mm 14mm 4.3mm 14mm;
+}
+.hero-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10mm; }
+.brandmark { display: flex; align-items: center; gap: 2.6mm; }
+.brand-badge {
+  width: 10mm; height: 10mm; border-radius: 2.6mm;
+  background: linear-gradient(155deg, var(--teal-light), var(--teal-deep));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.35);
+  flex-shrink: 0;
+}
+.brand-badge svg { width: 5.4mm; height: 5.4mm; }
+.brand-name { font-size: 11.5pt; font-weight: 700; letter-spacing: 0.2px; color: #FFFFFF; }
+.brand-sub { font-size: 7pt; color: #A9C1E8; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 600; }
+.kicker-pill {
+  display: inline-flex; align-items: center; gap: 1.5mm;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 1.7mm 3.6mm;
+  font-size: 7.2pt; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase;
+  color: #DCE7F7; white-space: nowrap;
+}
+.hero-title { font-size: 19.5pt; font-weight: 800; line-height: 1.12; margin: 3.5mm 0 1.6mm 0; color: #FFFFFF; letter-spacing: -0.3px; }
+.hero-tagline { font-size: 10.2pt; font-weight: 600; color: var(--teal-light); margin: 0 0 1.8mm 0; }
+.hero-desc { font-size: 8.6pt; line-height: 1.44; color: #C9D6EA; max-width: 150mm; margin: 0 0 3mm 0; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 2mm; }
+.chip {
+  font-size: 7.2pt; font-weight: 600; color: #EAF1FF;
+  background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.22);
+  padding: 1.4mm 3.2mm; border-radius: 20px; letter-spacing: 0.2px;
+}
+.hero-meta {
+  text-align: right; font-size: 7.6pt; color: #AFC0DC; line-height: 1.6; min-width: 46mm;
+}
+.hero-meta b { color: #FFFFFF; font-weight: 700; }
+
+/* ---------- body ---------- */
+.body-wrap { padding: 3.4mm 14mm 0 14mm; }
+.section-label {
+  display: flex; align-items: center; gap: 2.2mm;
+  font-size: 8.6pt; font-weight: 800; color: var(--slate-900);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin: 3mm 0 1.5mm 0;
+}
+.section-label .dot { width: 2.8mm; height: 2.8mm; border-radius: 1px; flex-shrink: 0; }
+.dot-teal { background: var(--teal); }
+.dot-amber { background: var(--amber); }
+.dot-rose { background: var(--rose); }
+.dot-emerald { background: var(--emerald); }
+.dot-indigo { background: var(--indigo); }
+
+.callout {
+  border-radius: 2.6mm; padding: 2.2mm 4mm; font-size: 8pt; line-height: 1.34;
+  border-left: 3px solid; margin-bottom: 1mm;
+}
+.callout-rose { background: var(--rose-bg); border-color: var(--rose); color: #6E1420; }
+.callout-teal { background: #E7EEFC; border-color: var(--teal); color: #10254F; }
+.callout-amber { background: var(--amber-bg); border-color: var(--amber); color: #5C3406; }
+.callout b { font-weight: 700; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 2.6mm; }
+
+.card {
+  background: var(--card); border-radius: 2.6mm; padding: 2mm 2.6mm;
+  border: 1px solid var(--slate-300); border-top: 2.4px solid var(--teal);
+  box-shadow: 0 1px 2px rgba(15,25,45,0.05);
+}
+.card.acc-amber { border-top-color: var(--amber); }
+.card.acc-rose { border-top-color: var(--rose); }
+.card.acc-emerald { border-top-color: var(--emerald); }
+.card.acc-indigo { border-top-color: var(--indigo); }
+.card-icon {
+  width: 6.6mm; height: 6.6mm; border-radius: 1.8mm; display: flex; align-items: center; justify-content: center;
+  background: #E7EEFC; margin-bottom: 1.6mm;
+}
+.card-icon svg { width: 3.8mm; height: 3.8mm; }
+.card.acc-amber .card-icon { background: var(--amber-bg); }
+.card.acc-rose .card-icon { background: var(--rose-bg); }
+.card.acc-emerald .card-icon { background: var(--emerald-bg); }
+.card.acc-indigo .card-icon { background: var(--indigo-bg); }
+.card-title { font-size: 8.8pt; font-weight: 700; color: var(--slate-900); margin-bottom: 0.7mm; }
+.card-desc { font-size: 7.5pt; line-height: 1.34; color: var(--slate-700); }
+
+.stat-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2.2mm; }
+.stat-tile {
+  border-radius: 2.4mm; padding: 2.1mm 2.1mm; text-align: left;
+  background: var(--slate-100); border: 1px solid var(--slate-300);
+}
+.stat-tile .num { font-size: 12pt; font-weight: 800; color: var(--slate-900); line-height: 1; }
+.stat-tile .label { font-size: 6.6pt; color: var(--slate-500); margin-top: 0.9mm; line-height: 1.26; font-weight: 600; }
+.stat-tile.teal { background: #E7EEFC; border-color: #C1D2F5; }
+.stat-tile.amber { background: var(--amber-bg); border-color: #F3D3A6; }
+.stat-tile.emerald { background: var(--emerald-bg); border-color: #BEE3CE; }
+.stat-tile.indigo { background: var(--indigo-bg); border-color: #D3C4F2; }
+.stat-tile.rose { background: var(--rose-bg); border-color: #F0C2CC; }
+
+.pipeline {
+  display: flex; align-items: stretch; flex-wrap: wrap; gap: 0mm 0mm;
+  background: var(--slate-100); border: 1px solid var(--slate-300); border-radius: 2.6mm; padding: 1.6mm;
+}
+.pipe-step {
+  background: var(--card); border: 1px solid var(--slate-300); border-radius: 2mm;
+  padding: 1mm 2mm; font-size: 6.9pt; text-align: center; min-width: 23mm;
+}
+.pipe-step b { display: block; font-size: 7.4pt; color: var(--slate-900); font-weight: 700; margin-bottom: 0.3mm; }
+.pipe-step span { color: var(--slate-500); }
+.pipe-arrow { display: flex; align-items: center; justify-content: center; padding: 0 1.4mm; color: var(--teal); font-size: 9pt; font-weight: 700; }
+.pipe-step.agent { border-color: var(--amber); background: var(--amber-bg); }
+.pipe-step.agent b { color: #5C3406; }
+
+table.kv { width: 100%; border-collapse: collapse; font-size: 7.6pt; }
+table.kv th { text-align: left; font-size: 6.9pt; text-transform: uppercase; letter-spacing: 0.5px; color: var(--slate-500); padding: 1.2mm 2mm; border-bottom: 1.5px solid var(--slate-300); }
+table.kv td { padding: 1.3mm 2mm; border-bottom: 1px solid var(--slate-100); color: var(--slate-700); vertical-align: top; }
+table.kv td.mono, code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 7.2pt; color: var(--teal-deep); background: #E7EEFC; padding: 0.4mm 1.4mm; border-radius: 1mm; }
+table.kv tr:last-child td { border-bottom: none; }
+
+.codeblock {
+  background: var(--ink); color: #D9E6FF; border-radius: 2.4mm; padding: 2.8mm 3.8mm;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 7.6pt; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
+}
+.codeblock .c1 { color: #7A8FBF; }
+.codeblock .c2 { color: #7FC4D9; }
+
+ul.tick { list-style: none; padding: 0; margin: 0; }
+ul.tick li { position: relative; padding-left: 4.2mm; font-size: 7.2pt; line-height: 1.3; color: var(--slate-700); margin-bottom: 0.6mm; }
+ul.tick li::before { content: ""; position: absolute; left: 0; top: 1.5mm; width: 2.1mm; height: 2.1mm; border-radius: 50%; background: var(--teal); }
+ul.tick.amber li::before { background: var(--amber); }
+ul.tick.rose li::before { background: var(--rose); }
+
+.steps-row { display: flex; gap: 2.6mm; }
+.step-pill {
+  flex: 1; background: var(--card); border: 1px solid var(--slate-300); border-radius: 2.4mm;
+  padding: 2.2mm 2.8mm; font-size: 7.4pt; color: var(--slate-700); display: flex; gap: 1.8mm; align-items: flex-start;
+}
+.step-pill .n {
+  flex-shrink: 0; width: 5mm; height: 5mm; border-radius: 50%; background: var(--teal);
+  color: #fff; font-size: 7.6pt; font-weight: 700; display: flex; align-items: center; justify-content: center;
+}
+
+.footer-cta {
+  margin-top: 2.6mm;
+  background: linear-gradient(120deg, var(--ink) 0%, var(--teal-deep) 100%);
+  color: #fff; padding: 2.6mm 14mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm;
+}
+.footer-cta .ftitle { font-size: 11.5pt; font-weight: 800; margin-bottom: 1mm; }
+.footer-cta .fsub { font-size: 7.4pt; color: #C9D6EA; }
+.footer-cta .fright { text-align: right; font-size: 7.1pt; color: #AFC0DC; }
+.footer-cta .fright b { color: #fff; }
+.foot-note { text-align: center; font-size: 6.6pt; color: var(--slate-500); padding: 0.7mm 14mm 0 14mm; }
+
+.two-col-body { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 5mm; align-items: start; }
+.small-h { font-size: 8pt; font-weight: 700; color: var(--slate-900); margin: 2.4mm 0 1mm 0; }
+p.lead { font-size: 8.4pt; line-height: 1.5; color: var(--slate-700); margin: 0 0 1.6mm 0; }
+</style></head>
+<body>
+<div class="page">
+  
+<div class="hero">
+  <div class="hero-top">
+    <div class="brandmark">
+      <div class="brand-badge"><svg viewBox="0 0 24 24" fill="none" stroke="#08152E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.2 8.8l-2 6-6 2 2-6z"/></svg></div>
+      <div>
+        <div class="brand-name">Career Trajectory Optimizer</div>
+        <div class="brand-sub">Deep Agents Career Coach</div>
+      </div>
+    </div>
+    <span class="kicker-pill">Learning Project &middot; Deep Agents</span>
+  </div>
+  <div class="hero-title">Know your market position.<br/>Get a roadmap you&rsquo;ll actually follow.</div>
+  <div class="hero-tagline">Career Trajectory Optimizer &mdash; AI career coach for Indian tech professionals</div>
+  <div class="hero-desc">A Deep Agents system that parses your profile, researches the live Indian tech market, benchmarks your salary, and scores your risk &mdash; then, if you state a goal, builds a personalized 30-60-90 day roadmap. One orchestrator plans and delegates to eight specialist subagents; nothing is synced to a calendar without your approval.</div>
+  <div class="chip-row"><span class="chip">Deep Agents</span><span class="chip">8 specialist subagents</span><span class="chip">Web-grounded research</span><span class="chip">Goal-based roadmaps</span><span class="chip">Human-approved actions</span></div>
+</div>
+
+  <div class="body-wrap">
+    
+<div class="section-label"><span class="dot dot-rose"></span>The problem with career decisions</div>
+<div class="callout callout-rose">
+  Indian tech professionals make career decisions with fragmented, incomplete information. Salary data is
+  scattered across AmbitionBox, Levels.fyi, and Glassdoor. GenAI roles are growing roughly 180% year-over-year,
+  but few people know it. Nothing correlates your actual profile &mdash; skills, tenure, education tier &mdash;
+  against the market and against a stated goal. A generic chatbot will happily invent a plausible-sounding salary
+  number or timeline; in a career decision, a confident wrong answer costs you months.
+</div>
+
+    <div class="section-label"><span class="dot dot-teal"></span>Why it&rsquo;s built this way</div>
+    <div class="grid-3"><div class="card acc-teal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="21" y1="21" x2="15.2" y2="15.2"/></svg></div>
+        <div class="card-title">Reads your whole profile</div><div class="card-desc">profile-analyzer parses a resume upload (PDF/DOCX/TXT) or manual entry into a structured timeline, detecting education tier and flagging job-hopping or long tenure.</div></div><div class="card acc-teal"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15L15 9"/><path d="M11 6l1.5-1.5a4 4 0 015.7 5.7L16.5 12"/><path d="M13 18l-1.5 1.5a4 4 0 01-5.7-5.7L7.5 12"/></svg></div>
+        <div class="card-title">Researches live, not stale</div><div class="card-desc">market-researcher is the only subagent with web search (LinkUp primary, Tavily fallback) &mdash; it gathers current data so every other subagent reasons from the same grounded brief.</div></div><div class="card acc-rose"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div class="card-title">Never invents a number</div><div class="card-desc">Every salary range and risk score traces back to the grounding file or the researcher&rsquo;s findings &mdash; deterministic validators catch missing or out-of-range values before they reach you.</div></div><div class="card acc-amber"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v14"/><path d="M17 6V20"/><path d="M4 8h6"/><path d="M14 16h6"/></svg></div>
+        <div class="card-title">Explains your gap</div><div class="card-desc">career-recommender applies goal-specific logic &mdash; target salary, company, role, or GenAI transition &mdash; and states the gap and the levers that close it.</div></div><div class="card acc-indigo"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M5 8.2V13a4 4 0 004 4h4"/></svg></div>
+        <div class="card-title">Plans its own steps</div><div class="card-desc">The orchestrator classifies your brief into Profile Analysis Mode or Career Aspiration Mode and delegates accordingly, running independent subagents concurrently to cut wall-clock time.</div></div><div class="card acc-emerald"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg></div>
+        <div class="card-title">Reviewed before you see it</div><div class="card-desc">A dedicated critic subagent checks grounding accuracy, methodology compliance, and internal consistency across every file before the run completes.</div></div></div>
+    
+<div class="section-label"><span class="dot dot-emerald"></span>What&rsquo;s actually under the hood</div>
+<div class="stat-tiles">
+  <div class="stat-tile teal"><div class="num">8</div><div class="label">specialist subagents, one orchestrator</div></div>
+  <div class="stat-tile indigo"><div class="num">2</div><div class="label">modes: Profile Analysis &amp; Career Aspiration</div></div>
+  <div class="stat-tile amber"><div class="num">5</div><div class="label">risk axes scored: salary, skill, security, burnout, growth</div></div>
+  <div class="stat-tile emerald"><div class="num">30-60-90</div><div class="label">day roadmap for every stated career goal</div></div>
+  <div class="stat-tile rose"><div class="num">&le;60s</div><div class="label">bounded LLM call timeout &mdash; no silent multi-minute stalls</div></div>
+</div>
+
+    <div class="section-label"><span class="dot dot-indigo"></span>Great for</div>
+    <div class="grid-4"><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M15.5 14c2.6.3 4.5 2 4.5 5"/></svg></div><div class="card-title">Working engineers</div><div class="card-desc">See exactly where your current pay and skills sit against the market before you ask for a raise or start interviewing.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5v17"/><path d="M6 4.5h11l-2.5 3.5L17 11.5H6"/></svg></div><div class="card-title">Job switchers with a goal</div><div class="card-desc">State a target salary, company, or role and get a gap analysis plus a concrete 30-60-90 day plan.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l8 4.2-8 4.2-8-4.2z"/><path d="M4 12l8 4.2 8-4.2"/><path d="M4 15.8L12 20l8-4.2"/></svg></div><div class="card-title">GenAI upskillers</div><div class="card-desc">Understand the skill premium and the shortest realistic path to a GenAI-focused role.</div></div><div class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#1E3A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.2 8.8l-2 6-6 2 2-6z"/></svg></div><div class="card-title">Career coaches &amp; mentors</div><div class="card-desc">Use the grounded dashboard as a structured starting point for a coaching conversation, not a black-box score.</div></div></div>
+    
+<div class="callout" style="background:linear-gradient(120deg,#0A1220,#1E3A8A);color:#fff;border-left:none;border-radius:3mm;">
+  <b style="color:#fff;">Config-driven setup, not a rewrite.</b>
+  <span style="color:#DCE7F7;">Swap the model, add LinkUp/Tavily keys, or point the backend at a different store
+  entirely through <span class="mono" style="background:rgba(255,255,255,0.18);color:#fff;">.env</span> &mdash;
+  the subagent prompts and orchestration logic never change.</span>
+</div>
+
+  </div>
+  
+<div class="footer-cta">
+  <div>
+    <div class="ftitle">Get your market position in minutes.</div>
+    <div class="fsub">Open source &middot; learning project &middot; OpenAI + LinkUp/Tavily &middot; runs on your own machine with Streamlit or Jupyter.</div>
+  </div>
+  <div class="fright"><b>1.</b> uv sync<br/><b>2.</b> streamlit run app.py<br/><b>3.</b> Upload your resume</div>
+</div>
+
+  <div class="foot-note">Career Trajectory Optimizer &middot; Deep Agents multi-agent career coach for Indian tech professionals &middot; built with Python, LangChain, LangGraph &amp; Streamlit</div>
+</div>
+</body></html>

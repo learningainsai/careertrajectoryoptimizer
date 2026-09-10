@@ -1,0 +1,18 @@
+# Environments
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets — never commit real credentials
+.env
+
+# OS
+.DS_Store
+
+# Runtime artifacts written by the agent at run time (regenerated on each run)
+profile/
+research/
+analysis/
+roadmap/
+plan/
+work/
