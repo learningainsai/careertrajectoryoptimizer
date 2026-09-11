@@ -7,7 +7,9 @@ This wraps the exact agent built in `career_optimizer_deep_agent.ipynb` (via
 `agent_core.py`) with an interactive front end: profile/goal input, live shared-state
 file inspection, the calendar-sync human-approval gate, and a cross-session memory check.
 
-Credentials are read from `.env` (see `.env.example`) — not entered in the UI.
+Credentials are normally read from `.env` (see `.env.example`) when running locally.
+The sidebar also accepts them directly for cases where `.env` isn't available (e.g. a
+cloud deployment) — those values are only kept in memory for the current session.
 """
 import os
 import uuid
@@ -38,23 +40,35 @@ st.caption("AI career coach for Indian tech professionals — Deep Agents multi-
 
 MODEL = os.environ.get("CAREER_AGENT_MODEL", "gpt-5-mini")
 
-# --- Sidebar: session controls (credentials come from .env, not the UI) ----
+# --- Sidebar: session controls -------------------------------------------
 with st.sidebar:
     st.header("Setup")
+    st.caption(
+        "Running locally? Add these to `.env` instead (see `.env.example`) and they'll be "
+        "picked up automatically \u2014 no need to enter them here. The fields below are for "
+        "deployments where `.env` isn't available (e.g. Streamlit Community Cloud); values "
+        "entered here are kept only for this session and are never saved to disk."
+    )
+    openai_key_input = st.text_input("OPENAI_API_KEY", type="password", placeholder="sk-...")
+    tavily_key_input = st.text_input(
+        "TAVILY_API_KEY (optional, web search fallback)", type="password", placeholder="tvly-..."
+    )
+    if openai_key_input.strip():
+        os.environ["OPENAI_API_KEY"] = openai_key_input.strip()
+    if tavily_key_input.strip():
+        os.environ["TAVILY_API_KEY"] = tavily_key_input.strip()
+
     has_openai = _is_real_key(os.environ.get("OPENAI_API_KEY", ""))
     has_linkup = _is_real_key(os.environ.get("LINKUP_API_KEY", ""))
     has_tavily = _is_real_key(os.environ.get("TAVILY_API_KEY", ""))
 
-    st.write("OPENAI_API_KEY:", "✅ found" if has_openai else "❌ missing")
+    st.write("OPENAI_API_KEY:", "✅ found" if has_openai else "❌ not set")
     if has_linkup:
         st.write("Web search:", "✅ LinkUp (primary)")
     elif has_tavily:
         st.write("Web search:", "✅ Tavily (fallback)")
     else:
         st.write("Web search:", "⚠️ optional, not set")
-
-    if not has_openai:
-        st.error(f"Add OPENAI_API_KEY to:\n\n`{ENV_PATH}`\n\nthen restart the app.")
 
     st.divider()
     if st.button("New session (new thread)"):
@@ -72,11 +86,9 @@ if has_openai and "agent" not in st.session_state:
 if "thread_id" not in st.session_state:
     st.session_state.thread_id = f"career-{uuid.uuid4().hex[:8]}"
 
-if "agent" not in st.session_state:
-    st.info("Add OPENAI_API_KEY to `.env` and refresh the page to start.")
-    st.stop()
-
-agent = st.session_state.agent
+# No upfront blocking message here — a missing key is only surfaced when the
+# user actually tries to run something, so the page stays usable meanwhile.
+agent = st.session_state.get("agent")
 config = {"configurable": {"thread_id": st.session_state.thread_id}, "recursion_limit": 60}
 
 # --- Main input form ---------------------------------------------------------
@@ -111,33 +123,47 @@ goal_text = st.text_input(
 run_clicked = st.button("Run analysis", type="primary", disabled=not profile_text.strip())
 
 if run_clicked:
-    brief = f"Profile: {profile_text.strip()}"
-    if goal_text.strip():
-        brief += f" Goal: {goal_text.strip()}"
+    if not has_openai:
+        st.error(
+            "OPENAI_API_KEY is required to run the analysis. Add it in the sidebar, or in "
+            f"`{ENV_PATH}` if running locally, then try again."
+        )
     else:
-        brief += " No specific goal yet — just show me where I stand in the market today."
+        if agent is None:
+            with st.spinner("Assembling deep agent..."):
+                agent, backend, store, checkpointer = build_agent(model=MODEL)
+                st.session_state.agent = agent
+                st.session_state.backend = backend
+                st.session_state.store = store
+                st.session_state.checkpointer = checkpointer
 
-    # This pipeline runs several subagents in sequence (each doing its own multi-turn
-    # reasoning), so a single run typically takes a few minutes — stream a brief live
-    # status instead of a static spinner so it's clear the run is progressing, not stuck.
-    # Detailed logs print to the console only (see print_trace_to_console below).
-    # A transient error (e.g. an LLM request timeout) is retried automatically,
-    # resuming from the last completed step instead of restarting the whole run.
-    with st.status("Starting analysis...", expanded=True) as status:
-        try:
-            state = run_agent_with_retry(
-                agent,
-                {"messages": [{"role": "user", "content": brief}]},
-                config,
-                on_progress=lambda label: status.update(label=label),
-            )
-            status.update(label="Analysis complete", state="complete")
-            st.session_state.result = state
-            print_trace_to_console(state["messages"])
-        except Exception as e:
-            status.update(label="Analysis failed", state="error")
-            st.session_state.result = None
-            st.error(f"The run failed after retries: {type(e).__name__}: {e}")
+        brief = f"Profile: {profile_text.strip()}"
+        if goal_text.strip():
+            brief += f" Goal: {goal_text.strip()}"
+        else:
+            brief += " No specific goal yet — just show me where I stand in the market today."
+
+        # This pipeline runs several subagents in sequence (each doing its own multi-turn
+        # reasoning), so a single run typically takes a few minutes — stream a brief live
+        # status instead of a static spinner so it's clear the run is progressing, not stuck.
+        # Detailed logs print to the console only (see print_trace_to_console below).
+        # A transient error (e.g. an LLM request timeout) is retried automatically,
+        # resuming from the last completed step instead of restarting the whole run.
+        with st.status("Starting analysis...", expanded=True) as status:
+            try:
+                state = run_agent_with_retry(
+                    agent,
+                    {"messages": [{"role": "user", "content": brief}]},
+                    config,
+                    on_progress=lambda label: status.update(label=label),
+                )
+                status.update(label="Analysis complete", state="complete")
+                st.session_state.result = state
+                print_trace_to_console(state["messages"])
+            except Exception as e:
+                status.update(label="Analysis failed", state="error")
+                st.session_state.result = None
+                st.error(f"The run failed after retries: {type(e).__name__}: {e}")
 
 # --- Results -----------------------------------------------------------------
 result = st.session_state.get("result")
@@ -232,18 +258,24 @@ if result:
 st.divider()
 st.subheader("3. Check remembered progress (new thread)")
 if st.button("Ask a fresh session to recall my progress"):
-    memory_config = {
-        "configurable": {"thread_id": f"{st.session_state.thread_id}-checkin"},
-        "recursion_limit": 20,
-    }
-    try:
-        with st.spinner("Reading /memories/career_progress.md..."):
-            memory_result = invoke_with_retry(
-                agent,
-                {"messages": [{"role": "user",
-                               "content": "Read /memories/career_progress.md and summarise where we left off in one line."}]},
-                memory_config,
-            )
-        st.info(memory_result["messages"][-1].content)
-    except Exception as e:
-        st.error(f"Memory check failed after retries: {type(e).__name__}: {e}")
+    if not has_openai or agent is None:
+        st.error(
+            "OPENAI_API_KEY is required. Add it in the sidebar, or in "
+            f"`{ENV_PATH}` if running locally, then try again."
+        )
+    else:
+        memory_config = {
+            "configurable": {"thread_id": f"{st.session_state.thread_id}-checkin"},
+            "recursion_limit": 20,
+        }
+        try:
+            with st.spinner("Reading /memories/career_progress.md..."):
+                memory_result = invoke_with_retry(
+                    agent,
+                    {"messages": [{"role": "user",
+                                   "content": "Read /memories/career_progress.md and summarise where we left off in one line."}]},
+                    memory_config,
+                )
+            st.info(memory_result["messages"][-1].content)
+        except Exception as e:
+            st.error(f"Memory check failed after retries: {type(e).__name__}: {e}")
