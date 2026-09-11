@@ -7,6 +7,8 @@ factored out so the Streamlit UI (`app.py`) doesn't duplicate it.
 from __future__ import annotations
 
 import os
+import shutil
+import subprocess
 from pathlib import Path
 
 from langchain.tools import tool
@@ -328,11 +330,12 @@ def build_agent(model: str = "gpt-5-mini"):
         routes={"/memories/": StoreBackend(namespace=lambda ctx: ("career",))},
     )
 
-    # Bound retries/timeout explicitly. Left at library defaults, a 429 (rate
-    # limit) can silently back off for many minutes on a free-tier daily quota
-    # with tight per-minute limits — fail fast with a visible error instead.
+    # TEMP FIX: analysis kept timing out mid-run, so the request-level timeout
+    # is disabled here (None = wait as long as it takes) and max_retries raised,
+    # trading "fail fast" for "let it finish". Revert to timeout=60/max_retries=2
+    # once the underlying rate-limit/latency issue is resolved.
     from langchain_openai import ChatOpenAI
-    llm = ChatOpenAI(model=model, max_retries=2, timeout=60)
+    llm = ChatOpenAI(model=model, max_retries=6, timeout=None)
 
     agent = create_deep_agent(
         model=llm,
@@ -360,6 +363,74 @@ def pending_requests(result: dict) -> list:
         else:
             reqs.append(val)
     return reqs
+
+
+def run_agent_with_retry(agent, initial_input, config: dict, on_progress=None, max_retries: int = 6):
+    """Stream the agent, auto-retrying on a transient error (e.g. an LLM request
+    timeout) instead of crashing the whole multi-minute run.
+
+    On failure, the retry resumes from the checkpointer's last saved step
+    (passing `None` as input) rather than restarting the pipeline from scratch,
+    so only the step that failed is redone.
+
+    `on_progress(label: str)`, if given, is called for each new tool call and
+    for each retry attempt. Every progress line is also printed to the console.
+    """
+    def _notify(label: str) -> None:
+        if on_progress:
+            on_progress(label)
+        print(f"[status] {label}")
+
+    seen_tool_call_ids: set = set()
+    payload = initial_input
+    attempt = 0
+    while True:
+        try:
+            state = None
+            for state in agent.stream(payload, config=config, stream_mode="values"):
+                last_msg = (state.get("messages") or [None])[-1]
+                for tc in (getattr(last_msg, "tool_calls", None) or []):
+                    if tc.get("id") in seen_tool_call_ids:
+                        continue
+                    seen_tool_call_ids.add(tc.get("id"))
+                    name = tc.get("name", "tool")
+                    args = tc.get("args", {}) or {}
+                    if name == "task":
+                        _notify(f"Delegating to `{args.get('subagent_type', 'subagent')}`...")
+                    elif name == "write_todos":
+                        _notify("Planning next steps...")
+                    elif name == "sync_to_calendar":
+                        _notify(f"Requesting calendar sync: {args.get('task_description', '')}")
+                    else:
+                        _notify(f"Calling `{name}`...")
+            return state
+        except Exception as e:
+            attempt += 1
+            if attempt > max_retries:
+                raise
+            _notify(f"{type(e).__name__}: {e} \u2014 retrying (attempt {attempt}/{max_retries})...")
+            payload = None  # resume from the last checkpoint instead of restarting
+
+
+def invoke_with_retry(agent, payload, config: dict, on_progress=None, max_retries: int = 6):
+    """Same retry-and-resume behavior as run_agent_with_retry, for a single
+    non-streaming agent.invoke() call (e.g. resuming after a HITL decision)."""
+    def _notify(label: str) -> None:
+        if on_progress:
+            on_progress(label)
+        print(f"[status] {label}")
+
+    attempt = 0
+    current_payload = payload
+    while True:
+        try:
+            return agent.invoke(current_payload, config=config)
+        except Exception as e:
+            attempt += 1
+            if attempt > max_retries:
+                raise
+            _notify(f"{type(e).__name__}: {e} \u2014 retrying (attempt {attempt}/{max_retries})...")
+            current_payload = None  # resume from the last checkpoint instead of resending
 
 
 def _format_todos(todos: list) -> str:
@@ -437,3 +508,73 @@ def build_trace_entries(messages: list) -> list[dict]:
             continue
 
     return entries
+
+
+def print_trace_to_console(messages: list) -> None:
+    """Print the sequential agent trace to the server console (terminal running
+    `streamlit run app.py`) instead of the UI — useful for debugging a run without
+    cluttering the interface."""
+    print("\n" + "=" * 70)
+    print("AGENT TRACE")
+    print("=" * 70)
+    for entry in build_trace_entries(messages):
+        print(f"\n[{entry['kind']}] {entry['heading']}")
+        body = entry["body"]
+        if body:
+            print(str(body))
+    print("=" * 70 + "\n")
+
+
+def _find_chrome() -> str | None:
+    candidates = [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+        shutil.which("google-chrome") or "",
+        shutil.which("chromium") or "",
+    ]
+    for candidate in candidates:
+        if candidate and Path(candidate).exists():
+            return candidate
+    return None
+
+
+def render_text_pdf(title: str, subtitle: str, body_text: str) -> bytes | None:
+    """Render plain text as a simple styled PDF via headless Chrome.
+
+    Returns None if no Chrome/Chromium binary is available (caller should show
+    the text on-screen anyway and just skip offering the download).
+    """
+    import html as html_lib
+    import tempfile
+
+    chrome_bin = _find_chrome()
+    if not chrome_bin:
+        return None
+
+    escaped_body = html_lib.escape(body_text).replace("\n", "<br/>")
+    html_doc = f"""<!doctype html>
+<html><head><meta charset="utf-8"/><style>
+  @page {{ size: A4; margin: 20mm; }}
+  body {{ font-family: -apple-system, "Segoe UI", Arial, sans-serif; color: #1B2430; }}
+  h1 {{ font-size: 18pt; color: #0A1220; margin: 0 0 2mm 0; }}
+  .subtitle {{ font-size: 9.5pt; color: #62788C; margin-bottom: 8mm; }}
+  .body {{ font-size: 10.5pt; line-height: 1.6; white-space: pre-wrap; }}
+</style></head>
+<body>
+  <h1>{html_lib.escape(title)}</h1>
+  <div class="subtitle">{html_lib.escape(subtitle)}</div>
+  <div class="body">{escaped_body}</div>
+</body></html>"""
+
+    with tempfile.TemporaryDirectory() as tmp:
+        html_path = Path(tmp) / "recommendation.html"
+        pdf_path = Path(tmp) / "recommendation.pdf"
+        html_path.write_text(html_doc, encoding="utf-8")
+        subprocess.run(
+            [
+                chrome_bin, "--headless", "--disable-gpu", "--no-pdf-header-footer",
+                "--print-to-pdf-no-header", f"--print-to-pdf={pdf_path}", str(html_path),
+            ],
+            check=True, capture_output=True,
+        )
+        return pdf_path.read_bytes()
