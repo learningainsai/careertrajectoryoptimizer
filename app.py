@@ -50,11 +50,17 @@ with st.sidebar:
         "entered here are kept only for this session and are never saved to disk."
     )
     openai_key_input = st.text_input("OPENAI_API_KEY", type="password", placeholder="sk-...")
+    st.caption("Web search is optional \u2014 only one of LinkUp or Tavily is needed if you want it.")
+    linkup_key_input = st.text_input(
+        "LINKUP_API_KEY (optional, web search primary)", type="password", placeholder="lp_..."
+    )
     tavily_key_input = st.text_input(
         "TAVILY_API_KEY (optional, web search fallback)", type="password", placeholder="tvly-..."
     )
     if openai_key_input.strip():
         os.environ["OPENAI_API_KEY"] = openai_key_input.strip()
+    if linkup_key_input.strip():
+        os.environ["LINKUP_API_KEY"] = linkup_key_input.strip()
     if tavily_key_input.strip():
         os.environ["TAVILY_API_KEY"] = tavily_key_input.strip()
 
